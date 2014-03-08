@@ -1,0 +1,72 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Intermedior</title>
+
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/home.css">
+<script src="/static/js/jquery-2.1.0.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<input type = "hidden" id = "GOOGLE_API_KEY" value = "{{ GOOGLE_API_KEY }}" />
+
+<div class="container-fluid" id = "md_container">
+	<div class="row">
+		<div class = "col-md-6">
+			<label for = "md_search_field">Enter a brand name</label>
+			<input type = "text" id = "md_search_field" />
+			<button type="button" class="btn btn-default btn-sm" id = "md_search_btn">Search</button>
+		</div>
+	</div>
+	
+	<div class = "row" id = "md_search_area" style = "display:none">
+		<div class = "col-md-8">
+			<h4>Search results</h4>
+			<hr />
+			
+			<div class = "row" id = "md_search_results">
+				<div class = "col-md-12">
+					<ul class = "list-unstyled" id = "md_search_categories">
+						<li data-category_value = "youtube" class = "md_search_category">
+							<h4>Youtube</h4>
+							<div class = "col-md-12">
+								<ul class = "list-unstyled md_search_values">
+									<li id = "youtube_sample" style = "display:none" class = "md_search_value">
+										<div class = "row">
+											<div class = "col-md-2">
+												<img src = "" class = "youtube_thumbnail" />
+											</div>
+											<div class = "col-md-8">
+												<div><span>Title: </span><span class = "youtube_title"></span></div>
+												<div><span>Channel: </span><span class = "youtube_channel"></span></div>
+												<div><span>Views: </span><span class = "youtube_views"></span></div>
+												<div><span>Link: </span><a href = "" class = "youtube_link"></a></div>
+											</div>
+										</div>
+									</li>
+									
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class = "row" id = "md_search_no_results" style = "display:none">
+				<div class = "col-md-4">
+				 No results found
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script src="/static/js/home.js"></script>
+
+</body>
+</html>

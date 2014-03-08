@@ -20,6 +20,8 @@ DATABASES = {
     }
 }
 
+GOOGLE_API_KEY = "AIzaSyBy6Ls3-DavSqc7ve_y5Cdb5JfDbRrjTpo"
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -119,6 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mediator',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
