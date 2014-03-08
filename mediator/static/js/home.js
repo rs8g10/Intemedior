@@ -9,6 +9,10 @@ var mediator = {
 	results_per_category : 5,
 	categories : null,
 	catgs : [],
+	youtube_filter_views : false,
+	youtube_filter_views_c : 1000000,
+	youtube_filter_pressed : false,
+	search_string : null,
 	
 	startup : function() {
 		mediator.bind_variables();
@@ -24,31 +28,37 @@ var mediator = {
 	bind_events : function() {
 		$('#md_search_btn').bind("click", mediator.search_api);
 		$('#md_search_field').bind("keypress", mediator.search_api);
+		$('#md_filter_views').bind("change", mediator.views_filter_pressed);
 	},
 	search_api : function(event) {
 		if ($(this).attr("id") !== "md_search_field" || event.which === 13) {
 			var search_value = $.trim($("#md_search_field").val());
 			if (search_value !== "") {
-				$('#md_search_area').hide();
+				mediator.search_string = search_value;
+				mediator.youtube_filter_pressed = false;
+				mediator.youtube_filter_views = false;
+				$('#md_filter_views').attr("checked", false);
+				$('#md_search_results').hide();
 				$('#md_search_no_results').hide();
-				mediator.process_categories(mediator.catgs, search_value, 0, 0);
+				mediator.process_categories(mediator.catgs, 0, 0);
 			}
 		}
 	},
-	process_categories : function(catgs, search_value, index, num_results) {
+	process_categories : function(catgs, index, num_results) {
 		var category = catgs[index];
-		var def = mediator.categories[category](search_value);
+		var def = mediator.categories[category](mediator.search_string);
 		def.done(function(results) {
 			num_results+= results;
 			index++;
 			if (index === catgs.length) {
 				if (num_results > 0) {
-					$('#md_search_area').show();
+					$('#md_search_results').show();
 				} else {
 					$('#md_search_no_results').show();
 				}
+				$('#md_search_area').show();
 			} else {
-				process_categories(catgs, search_value, index, num_results);
+				process_categories(catgs, index, num_results);
 			}
 		});
 	},
@@ -65,13 +75,15 @@ var mediator = {
 		search_url+= "&maxResults=" + mediator.results_per_category;
 		search_url+= "&part=snippet";
 		search_url+= "&q=" + search_value;
+		search_url+= "&order=" + (mediator.youtube_filter_views ? "viewCount" : "relevance");
 		
 		$.getJSON(search_url, function(response) {
 			if (response.error) {
 				def.resolve(num_results);
 			} else {
-				if (response.items.length === 0) {
+				if (response.items.length === 0 && !mediator.youtube_filter_pressed) {
 					category.hide();
+					def.resolve(num_results);
 				} else {
 					var video_ids = [];
 					for (var i = 0; i < response.items.length; i++) {
@@ -91,16 +103,18 @@ var mediator = {
 						if (!response.error) {
 							var parent = category.find(".md_search_values");
 							for (var i = 0; i < response.items.length; i++) {
-								num_results++;
-								var dom = sample_value.clone().removeAttr("id");
 								var item = response.items[i];
-								var link = mediator.YOUTUBE_VIDEO_URL + "?v=" + item.id;
-								dom.find(".youtube_thumbnail").attr("src", item.snippet.thumbnails["default"].url);
-								dom.find(".youtube_title").html(item.snippet.title);
-								dom.find(".youtube_channel").html(item.snippet.channelTitle);
-								dom.find(".youtube_views").html(item.statistics.viewCount);
-								dom.find(".youtube_link").attr("href", link).html(link);
-								parent.append(dom.show());
+								if (!mediator.youtube_filter_views || item.statistics.viewCount > mediator.youtube_filter_views_c) {
+									num_results++;
+									var dom = sample_value.clone().removeAttr("id");
+									var link = mediator.YOUTUBE_VIDEO_URL + "?v=" + item.id;
+									dom.find(".youtube_thumbnail").attr("src", item.snippet.thumbnails["default"].url);
+									dom.find(".youtube_title").html(item.snippet.title);
+									dom.find(".youtube_channel").html(item.snippet.channelTitle);
+									dom.find(".youtube_views").html(item.statistics.viewCount);
+									dom.find(".youtube_link").attr("href", link).html(link);
+									parent.append(dom.show());
+								}
 							}
 							category.show();
 						}
@@ -110,6 +124,11 @@ var mediator = {
 			}
 		});
 		return def;
+	},
+	views_filter_pressed : function(event) {
+		mediator.youtube_filter_views = (this.checked === true);
+		mediator.youtube_filter_pressed = true;
+		mediator.categories["youtube"](mediator.search_string);
 	}
 };
 

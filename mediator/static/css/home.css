@@ -2,8 +2,17 @@
 
 #md_container {
 	margin-top: 10px;
+	margin-bottom: 50px;
 }
 
 #md_search_area {
+	margin-top: 30px;
+}
+
+.md_search_value {
+	margin-top: 20px;
+}
+
+#md_filter_area {
 	margin-top: 30px;
 }
