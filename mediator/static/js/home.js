@@ -15,10 +15,15 @@ var mediator = {
 	youtube_filter_pressed : false,
 	search_string : null,
 	request_sent : false,
+	default_image_count : 1,
+	default_image_number : 3,
+	default_image_timeout : 3000,
+	default_image_on : true,
 	
 	startup : function() {
 		mediator.bind_variables();
 		mediator.bind_events();
+		mediator.set_default_image();
 	},
 	bind_variables : function() {
 		mediator.GOOGLE_API_KEY = $('#GOOGLE_API_KEY').val();
@@ -33,11 +38,21 @@ var mediator = {
 		$('#md_search_field').bind("keypress", mediator.search_api);
 		$('#md_filter_views').bind("change", mediator.views_filter_pressed);
 	},
+	set_default_image : function() {
+		if (mediator.default_image_on) {
+			window.setTimeout(function() {
+				mediator.default_image_count = mediator.default_image_count % mediator.default_image_number + 1;
+				$('#md_default_image').attr("src", "/static/img/search_image" + mediator.default_image_count + ".png");
+				mediator.set_default_image();
+			}, mediator.default_image_timeout);
+		}
+	},
 	search_api : function(event) {
 		if (mediator.request_sent) {
 			return;
 		}
 		if ($(this).attr("id") !== "md_search_field" || event.which === 13) {
+			mediator.default_image_on = false;
 			var search_value = $.trim($("#md_search_field").val());
 			if (search_value !== "") {
 				mediator.search_string = search_value;
@@ -57,13 +72,17 @@ var mediator = {
 		def.done(function(results) {
 			num_results+= results;
 			index++;
-			if (index === catgs.length) {
-				if (num_results > 0) {
-					$('#md_search_results').show();
-				} else {
-					$('#md_search_no_results').show();
-				}
+			if (num_results > 0) {
+				$('#md_default_area').hide();
+				$('#md_search_results').show();
 				$('#md_search_area').show();
+			}
+			if (index === catgs.length) {
+				if (num_results === 0) {
+					$('#md_default_area').hide();
+					$('#md_search_no_results').show();
+					$('#md_search_area').show();
+				}
 				mediator.request_sent = false;
 			} else {
 				mediator.process_categories(catgs, index, num_results);
@@ -165,7 +184,6 @@ var mediator = {
 			dataType: "json",
 			data: {"search_tag" : search_value, "results" : mediator.tumblr_results},
 			success: function(res) {
-				console.log(res);
 				if (res.length === 0) {
 					category.hide();
 				} else {
