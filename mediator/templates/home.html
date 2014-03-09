@@ -52,31 +52,42 @@
 	</div>
 	
 	<div class = "row" id = "md_search_area" style = "display:none">
-		<div class = "col-md-8">
-			<h4>Search results</h4>
-			<hr />
-			
+		<div class = "col-md-12">
+			<div class = "col-md-8">
+				<h4>Search results</h4>
+				<hr />
+			</div>
+			<div class = "col-md-4" id = "md_best_fit">
+				<div class = "row">
+					<div>
+						<h3>BEST MATERIAL FOR YOUR BRAND</h3>
+					</div>
+				</div>
+			</div>
 			<div class = "row" id = "md_search_results">
 				<div class = "col-md-12">
 					<ul class = "list-unstyled" id = "md_search_categories">
 						<li data-category_value = "youtube" class = "md_search_category">
-							<div class = "col-md-2">
-								<h2>Youtube</h4>
+							<div class = "row">
+								<div class = "col-md-2">
+									<h2>Youtube</h4>
+								</div>
+								<div class = "col-md-2 md_filter_area">
+									<input type = "checkbox" id = "md_filter_views" /><label for = "md_filter_views">&nbsp;&gt;1,000,000 views</label>
+								</div>
+								<div class = "col-md-2 md_filter_area">			
+									<label for = "md_filter_channels">Ignore these channels:</label>
+								</div>
+								<div class = "col-md-1">
+									<textarea id = "md_filter_channels" rows = "2" cols = "10"></textarea>
+								</div>
 							</div>
-							<div class = "col-md-3 md_filter_area">
-								<input type = "checkbox" id = "md_filter_views" /><label for = "md_filter_views">&nbsp;&gt;1,000,000 views</label>
-							</div>
-							<div class = "col-md-3 md_filter_area">			
-								<label for = "md_filter_channels">Ignore these channels:</label>
-							</div>
-							<div class = "col-md-3">
-								<textarea id = "md_filter_channels" rows = "2" cols = "25"></textarea>
-							</div>
-							<div class = "col-md-12">
-								<ul class = "list-unstyled md_search_values">
+							<div class = "row">
+							<div class = "col-md-8">
+								<ul class = "list-unstyled md_search_values md_results">
 									<li id = "youtube_sample" style = "display:none" class = "md_search_value">
 										<div class = "row">
-											<div class = "col-md-2">
+											<div class = "col-md-2 md_thumnail">
 												<img src = "" class = "youtube_thumbnail" />
 											</div>
 											<div class = "col-md-8">
@@ -96,13 +107,26 @@
 									
 								</ul>
 							</div>
+							<div class = "col-md-4">
+								<div class = "row">
+									<ul class = "list-unstyled md_search_values" id = "youtube_top_results">
+										
+									</ul>
+								</div>
+							</div>
+							</div>
+							
+							
 						</li>
 						<li data-category_value = "tumblr" class = "md_search_category">
-							<div class = "col-md-2">
-								<h2>Tumblr</h4>
+							<div class = "row">
+								<div class = "col-md-2">
+									<h2>Tumblr</h4>
+								</div>
 							</div>
-							<div class = "col-md-12">
-								<ul class = "list-unstyled md_search_values">
+							<div class = "row">
+							<div class = "col-md-8">
+								<ul class = "list-unstyled md_search_values md_results">
 									<li id = "tumblr_sample" style = "display:none" class = "md_search_value">
 										<div class = "row">
 											<div class = "col-md-2">
@@ -124,17 +148,27 @@
 									
 								</ul>
 							</div>
+							<div class = "col-md-4">
+								<div class = "row">
+									<ul class = "list-unstyled md_search_values" id = "tumblr_top_results">
+										
+									</ul>
+								</div>
+							</div>
+							
+							</div>
+					
 						</li>
 					</ul>
 				</div>
 			</div>
 			
+		</div>
 			<div class = "row" id = "md_search_no_results" style = "display:none">
-				<div class = "col-md-4">
+				<div class = "col-md-4 col-md-offset-1">
 				 No results found
 				</div>
 			</div>
-		</div>
 	</div>
 </div>
 
