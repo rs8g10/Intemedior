@@ -6,13 +6,15 @@ var mediator = {
 	GOOGLE_VIDEOS_URL : "https://www.googleapis.com/youtube/v3/videos",
 	YOUTUBE_VIDEO_URL : "http://www.youtube.com/watch",
 	GOOGLE_API_KEY : null,
-	results_per_category : 5,
+	results_per_category : 50,
+	tumblr_results : 50,
 	categories : null,
 	catgs : [],
 	youtube_filter_views : false,
 	youtube_filter_views_c : 1000000,
 	youtube_filter_pressed : false,
 	search_string : null,
+	request_sent : false,
 	
 	startup : function() {
 		mediator.bind_variables();
@@ -20,9 +22,10 @@ var mediator = {
 	},
 	bind_variables : function() {
 		mediator.GOOGLE_API_KEY = $('#GOOGLE_API_KEY').val();
-		mediator.catgs = ["youtube"];
+		mediator.catgs = ["youtube", "tumblr"];
 		mediator.categories = {
 			youtube : mediator.find_youtube_videos,
+			tumblr : mediator.find_tumblr_posts,
 		};
 	},
 	bind_events : function() {
@@ -31,12 +34,16 @@ var mediator = {
 		$('#md_filter_views').bind("change", mediator.views_filter_pressed);
 	},
 	search_api : function(event) {
+		if (mediator.request_sent) {
+			return;
+		}
 		if ($(this).attr("id") !== "md_search_field" || event.which === 13) {
 			var search_value = $.trim($("#md_search_field").val());
 			if (search_value !== "") {
 				mediator.search_string = search_value;
 				mediator.youtube_filter_pressed = false;
 				mediator.youtube_filter_views = false;
+				mediator.request_sent = true;
 				$('#md_filter_views').attr("checked", false);
 				$('#md_search_results').hide();
 				$('#md_search_no_results').hide();
@@ -57,8 +64,9 @@ var mediator = {
 					$('#md_search_no_results').show();
 				}
 				$('#md_search_area').show();
+				mediator.request_sent = false;
 			} else {
-				process_categories(catgs, index, num_results);
+				mediator.process_categories(catgs, index, num_results);
 			}
 		});
 	},
@@ -76,6 +84,7 @@ var mediator = {
 		search_url+= "&part=snippet";
 		search_url+= "&q=" + search_value;
 		search_url+= "&order=" + (mediator.youtube_filter_views ? "viewCount" : "relevance");
+		search_url+= "&type=video";
 		
 		$.getJSON(search_url, function(response) {
 			if (response.error) {
@@ -112,7 +121,14 @@ var mediator = {
 									dom.find(".youtube_title").html(item.snippet.title);
 									dom.find(".youtube_channel").html(item.snippet.channelTitle);
 									dom.find(".youtube_views").html(item.statistics.viewCount);
-									dom.find(".youtube_link").attr("href", link).html(link);
+									var connected = Math.floor(Math.random() * 2);
+									if (connected) {
+										dom.find(".youtube_link_parent").show();
+										dom.find(".youtube_link").attr("href", link).html(link);
+										dom.find(".connected").show();
+									} else {
+										dom.find(".connect").show();
+									}
 									parent.append(dom.show());
 								}
 							}
@@ -126,9 +142,58 @@ var mediator = {
 		return def;
 	},
 	views_filter_pressed : function(event) {
+		if (mediator.request_sent) {
+			return;
+		}
 		mediator.youtube_filter_views = (this.checked === true);
 		mediator.youtube_filter_pressed = true;
-		mediator.categories["youtube"](mediator.search_string);
+		mediator.request_sent = true;
+		mediator.categories["youtube"](mediator.search_string).done(function() {
+			mediator.request_sent = false;
+		});
+	},
+	find_tumblr_posts : function(search_value) {
+		var category = $('.md_search_category[data-category_value="tumblr"]');
+		var sample_value = $('#tumblr_sample');
+		category.find('.md_search_value').not(sample_value).empty();
+		var def = $.Deferred();
+		var num_results = 0;
+		
+		$.ajax({
+			url: $('#md_container').attr("data-tumblr_url"),
+			type: "GET",
+			dataType: "json",
+			data: {"search_tag" : search_value, "results" : mediator.tumblr_results},
+			success: function(res) {
+				console.log(res);
+				if (res.length === 0) {
+					category.hide();
+				} else {
+					var parent = category.find(".md_search_values");
+					for (var i = 0; i < res.length; i++) {
+						var item = res[i];
+						num_results++;
+						var dom = sample_value.clone().removeAttr("id");
+						dom.find(".tumblr_thumbnail").attr("src", item.thumbnail);
+						dom.find(".tumblr_name").html(item.blog_name);
+						var followers = Math.floor(Math.random() * 40000) + 10000;
+						dom.find(".tumblr_followers").html(followers);
+						var connected = Math.floor(Math.random()*4);
+						if (connected) {
+							dom.find(".tumblr_link_parent").show();
+							dom.find(".tumblr_link").attr("href", item.link).html(item.link);
+							dom.find(".connected").show();
+						} else {
+							dom.find(".connect").show();
+						}
+						parent.append(dom.show());
+					}
+					category.show();
+				}
+				def.resolve(num_results);
+			}
+		});
+		return def;
 	}
 };
 

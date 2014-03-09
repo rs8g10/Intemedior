@@ -22,6 +22,11 @@ DATABASES = {
 
 GOOGLE_API_KEY = "AIzaSyBy6Ls3-DavSqc7ve_y5Cdb5JfDbRrjTpo"
 
+TUMBLR_CONSUMER_KEY="I4xVHtccBaVRfpV8rUL9Hp9dsQiuBizc1YF3j7u6IdHGS0onz5"
+TUMBLR_CONSUMER_SECRET="ihy2zms3QBywJzhcx1KBiKHVmHsC4ofla16NXekeLT6PShewZu"
+TUMBLR_OAUTH_TOKEN="etP9bRnfXpz78edTB5XwAInMm2QhtDbXLh4t5HAJhAUuFURZ0O"
+TUMBLR_OAUTH_SECRET="oTXzTNhwavkpkrlz2ssLx36eOs4F1Ir2fPogMJ2IwK7v96vUwq"
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []

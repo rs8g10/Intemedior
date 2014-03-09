@@ -14,7 +14,7 @@
 <body>
 <input type = "hidden" id = "GOOGLE_API_KEY" value = "{{ GOOGLE_API_KEY }}" />
 
-<div class="container-fluid" id = "md_container">
+<div class="container-fluid" id = "md_container" data-tumblr_url = "{% url 'tumblr_posts' %}">
 	<div class="row">
 		<div class = "col-md-6">
 			<label for = "md_search_field">Enter a brand name</label>
@@ -35,8 +35,14 @@
 							<div class = "col-md-2">
 								<h2>Youtube</h4>
 							</div>
-							<div class = "col-md-4" id = "md_filter_area">
+							<div class = "col-md-3 md_filter_area">
 								<input type = "checkbox" id = "md_filter_views" /><label for = "md_filter_views">&nbsp;&gt;1,000,000 views</label>
+							</div>
+							<div class = "col-md-3 md_filter_area">			
+								<label for = "md_filter_channels">Ignore these channels:</label>
+							</div>
+							<div class = "col-md-3">
+								<textarea id = "md_filter_channels" rows = "2" cols = "25"></textarea>
 							</div>
 							<div class = "col-md-12">
 								<ul class = "list-unstyled md_search_values">
@@ -49,7 +55,37 @@
 												<div><span>Title: </span><span class = "youtube_title"></span></div>
 												<div><span>Channel: </span><span class = "youtube_channel"></span></div>
 												<div><span>Views: </span><span class = "youtube_views"></span></div>
-												<div><span>Link: </span><a href = "" class = "youtube_link"></a></div>
+												<div class = "youtube_link_parent" style = "display:none"><span>Link: </span><a href = "" class = "youtube_link"></a></div>
+												<div><span>On database: </span>
+													<button type="button" class = "connected btn-xs btn btn-success" style = "display:none">Yes</button>
+													<button type="button" class="connect btn-xs btn btn-info" style = "display:none">Request to connect</button>
+												</div>
+											</div>
+										</div>
+									</li>
+									
+								</ul>
+							</div>
+						</li>
+						<li data-category_value = "tumblr" class = "md_search_category">
+							<div class = "col-md-2">
+								<h2>Tumblr</h4>
+							</div>
+							<div class = "col-md-12">
+								<ul class = "list-unstyled md_search_values">
+									<li id = "tumblr_sample" style = "display:none" class = "md_search_value">
+										<div class = "row">
+											<div class = "col-md-2">
+												<img src = "" class = "tumblr_thumbnail" width = "120px" height = "90px"/>
+											</div>
+											<div class = "col-md-8">
+												<div><span>Blog name: </span><span class = "tumblr_name"></span></div>
+												<div><span>Followers: </span><span class = "tumblr_followers"></span></div>
+												<div class = "tumblr_link_parent" style = "display:none"><span>Link: </span><a href = "" class = "tumblr_link"></a></div>
+												<div><span>On database: </span>
+													<button type="button" class = "connected btn-xs btn btn-success" style = "display:none">Yes</button>
+													<button type="button" class="connect btn-xs btn btn-info" style = "display:none">Request to connect</button>
+												</div>
 											</div>
 										</div>
 									</li>
