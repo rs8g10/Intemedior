@@ -125,9 +125,9 @@ var mediator = {
 									if (connected) {
 										dom.find(".youtube_link_parent").show();
 										dom.find(".youtube_link").attr("href", link).html(link);
-										dom.find(".connected").show();
+										dom.find(".connected_txt, .connected_btn").show();
 									} else {
-										dom.find(".connect").show();
+										dom.find(".not_connected_txt, .not_connected_btn").show();
 									}
 									parent.append(dom.show());
 								}
@@ -182,9 +182,9 @@ var mediator = {
 						if (connected) {
 							dom.find(".tumblr_link_parent").show();
 							dom.find(".tumblr_link").attr("href", item.link).html(item.link);
-							dom.find(".connected").show();
+							dom.find(".connected_txt, .connected_btn").show();
 						} else {
-							dom.find(".connect").show();
+							dom.find(".not_connected_txt, .not_connected_btn").show();
 						}
 						parent.append(dom.show());
 					}
